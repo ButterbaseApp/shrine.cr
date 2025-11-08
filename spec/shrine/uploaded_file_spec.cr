@@ -2,10 +2,77 @@ require "../spec_helper"
 
 describe Shrine::UploadedFile do
 
-  after_each do
-    clear_storages
+
+  it "roundtrips via JSON" do
+    Shrine.settings.storages["store"] = Shrine::Storage::Memory.new
+    original = Shrine.store(fakeio("data"))
+
+    json = original.to_json
+    loaded = Shrine::UploadedFile.from_json(json)
+
+    loaded.id.should eq original.id
+    loaded.storage_key.should eq original.storage_key
+    loaded.metadata.should eq original.metadata
   end
 
+  it "supports [] access to metadata" do
+    file = Shrine::UploadedFile.new("id", "cache", Shrine::UploadedFile::MetadataType{"foo" => "bar"})
+    file["foo"].should eq "bar"
+  end
+
+  it "#open yields IO with block and returns IO without block" do
+    Shrine.settings.storages["store"] = Shrine::Storage::Memory.new
+    file = Shrine.store(fakeio("data"))
+
+    file.open do |io|
+      io.gets_to_end.should eq "data"
+    end
+
+    io = file.open
+    io.gets_to_end.should eq "data"
+    io.close
+  end
+
+  it "#download with block cleans up tempfile" do
+    Shrine.settings.storages["store"] = Shrine::Storage::Memory.new
+    file = Shrine.store(fakeio("data"))
+
+    path = nil
+    file.download do |tempfile|
+      path = tempfile.path
+      File.read(path).should eq "data"
+    end
+
+    File.exists?(path.not_nil!).should be_false
+  end
+
+  it "#replace uploads new content to same id" do
+    Shrine.settings.storages["store"] = Shrine::Storage::Memory.new
+    file = Shrine.store(fakeio("old"))
+
+    file.replace(fakeio("new"))
+
+    Shrine.settings.storages["store"].open(file.id).gets_to_end.should eq "new"
+  end
+
+  it "compares equality by class, id, and storage" do
+    a = Shrine::UploadedFile.new("id", "store")
+    b = Shrine::UploadedFile.new("id", "store")
+    c = Shrine::UploadedFile.new("id2", "store")
+
+    (a == b).should be_true
+    (a == c).should be_false
+  end
+
+  it "exposes #data hash" do
+    metadata = Shrine::UploadedFile::MetadataType{"foo" => "bar"}
+    file = Shrine::UploadedFile.new("id", "store", metadata)
+
+    data = file.data
+    data["id"].should eq "id"
+    data["storage_key"].should eq "store"
+    data["metadata"].should eq metadata
+  end
   it "initializes metadata if absent" do
     file = Shrine::UploadedFile.new("id", "cache")
     file.metadata.should be_a(Shrine::UploadedFile::MetadataType)

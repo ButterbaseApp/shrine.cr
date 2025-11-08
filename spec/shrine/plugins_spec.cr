@@ -81,4 +81,19 @@ describe "Shrine.plugin" do
       Shrine::UploadedFile.responds_to?(:foo).should be_false
     end
   end
+
+  describe "Plugin settings" do
+    it "exposes plugin_settings with all plugins" do
+      settings = PluginUploader.plugin_settings
+      all = settings.all
+      all.size.should be > 0
+      all.any? { |p| p[:name] == "foo_plugin" }.should be_true
+    end
+
+    it "provides accessor for each plugin" do
+      settings = PluginUploader.plugin_settings
+      settings.responds_to?(:foo_plugin).should be_true
+      settings.foo_plugin.should be_nil
+    end
+  end
 end

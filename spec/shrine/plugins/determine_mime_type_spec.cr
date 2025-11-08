@@ -8,6 +8,13 @@ class ShrineWithDetermineMimeTypeFile < Shrine
   finalize_plugins!
 end
 
+class ShrineWithDetermineMimeTypeContentType < Shrine
+  load_plugin(Shrine::Plugins::DetermineMimeType,
+    analyzer: Shrine::Plugins::DetermineMimeType::Tools::ContentType)
+
+  finalize_plugins!
+end
+
 class ShrineWithDetermineMimeTypeMime < Shrine
   load_plugin(Shrine::Plugins::DetermineMimeType,
     analyzer: Shrine::Plugins::DetermineMimeType::Tools::Mime)

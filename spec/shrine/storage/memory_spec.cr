@@ -16,6 +16,14 @@ describe Shrine::Storage::Memory do
     storage.exists?("id").should be_false
   end
 
+  it "raises FileNotFound when opening missing id" do
+    storage = Shrine::Storage::Memory.new
+
+    expect_raises(Shrine::FileNotFound) do
+      storage.open("missing")
+    end
+  end
+
   it "delete_prefixed and clear! work" do
     storage = Shrine::Storage::Memory.new
 

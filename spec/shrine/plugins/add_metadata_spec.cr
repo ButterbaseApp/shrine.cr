@@ -32,7 +32,12 @@ describe Shrine::Plugins::AddMetadata do
     describe "with argument" do
       it "adds declared metadata" do
         uploader = ShrineWithAddMetadata.new("store")
-        metadata = uploader.extract_metadata(fakeio)
+        io = fakeio("text")
+        pos_before = io.pos
+        metadata = uploader.extract_metadata(io)
+
+        io.pos.should eq pos_before
+
 
         metadata["custom"].should eq "value"
         metadata["size"].should be_a(Int32)
@@ -47,7 +52,7 @@ describe Shrine::Plugins::AddMetadata do
     end
 
     describe "with multiple metadata values" do
-      it "adds declared metadata" do
+      it "adds declared metadata and preserves IO position" do
         uploader = ShrineWithAddMetadata.new("store")
         io = fakeio("text")
         metadata = uploader.extract_metadata(io)
@@ -55,6 +60,7 @@ describe Shrine::Plugins::AddMetadata do
         metadata["custom_1"].should eq "text"
         metadata["custom_2"].should eq "text" * 2
         metadata["size"].should be_a(Int32)
+        io.pos.should eq 0
       end
 
       it "adds the metadata method to UploadedFile" do

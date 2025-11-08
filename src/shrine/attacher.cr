@@ -120,9 +120,15 @@ class Shrine
       #     attacher.finalize
       #     attacher.changed? #=> false
       def finalize
-        destroy_previous
-        promote_cached
-        @previous = nil if changed?
+        begin
+          destroy_previous
+          promote_cached
+          @previous = nil if changed?
+        rescue Shrine::FileNotFound
+          # Best-effort cleanup: missing files can be ignored, especially
+          # when finalize is triggered from GC/at_exit where storages may
+          # already be cleared or files removed.
+        end
       end
 
       # If a new cached file has been attached, uploads it to permanent storage.

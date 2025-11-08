@@ -106,7 +106,7 @@ describe Shrine::Storage::FileSystem do
       storage = build_fs_storage(root)
       storage.upload(FakeIO.new, "foo.jpg")
 
-      storage.url("foo.jpg", host: "http://example.test").should eq "http://example.test#{root}/foo.jpg"
+       storage.url("foo.jpg", host: "http://example.test").should eq "http://example.test#{root}/foo.jpg"
 
       FileUtils.rm_rf(root)
     end
@@ -128,7 +128,33 @@ describe Shrine::Storage::FileSystem do
       storage = build_fs_storage(root, prefix)
       storage.upload(FakeIO.new, "foo.jpg")
 
-      storage.url("foo.jpg", host: "http://cdn.test").should eq "http://cdn.test/#{prefix}/foo.jpg"
+       storage.url("foo.jpg", host: "http://cdn.test").should eq "http://cdn.test/#{prefix}/foo.jpg"
+
+      FileUtils.rm_rf(root)
+    end
+  end
+
+  describe "#delete" do
+    it "deletes file and cleans empty directories" do
+      root = File.join(Dir.tempdir, "shrine-delete-clean")
+      storage = build_fs_storage(root)
+
+      storage.upload(FakeIO.new("data"), "a/b/c/file.txt")
+      File.exists?(storage.path("a/b/c/file.txt")).should be_true
+
+      storage.delete("a/b/c/file.txt")
+      File.exists?(storage.path("a/b/c/file.txt")).should be_false
+
+      FileUtils.rm_rf(root)
+    end
+
+    it "raises FileNotFound on missing file open" do
+      root = File.join(Dir.tempdir, "shrine-open-missing")
+      storage = build_fs_storage(root)
+
+      expect_raises(Shrine::FileNotFound) do
+        storage.open("nonexistent.txt")
+      end
 
       FileUtils.rm_rf(root)
     end

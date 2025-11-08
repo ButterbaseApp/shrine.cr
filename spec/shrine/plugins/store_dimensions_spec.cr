@@ -29,6 +29,14 @@ describe Shrine::Plugins::StoreDimensions do
       metadata["width"].should eq 320
       metadata["height"].should eq 180
     end
+
+    it "adds width/height metadata to uploaded file" do
+      uploader = ShrineWithStoreDimensionsUsingFastImage.new("store")
+      file = uploader.upload(image)
+
+      file.metadata["width"].should eq 300
+      file.metadata["height"].should eq 300
+    end
   end
 
   describe "fastimage analyzer" do
