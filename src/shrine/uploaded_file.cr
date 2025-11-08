@@ -23,6 +23,7 @@ class Shrine
       {% end %}
     {% end %}
 
+    @[JSON::Field(ignore: true)]
     @io : IO?
     @mapper : Mapper
 
