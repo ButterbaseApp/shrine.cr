@@ -104,7 +104,7 @@ Spectator.describe Shrine::Storage::S3 do
       it "returns the full url" do
         expect(
           subject.url("foo.jpg")
-        ).to match(/https:\/\/s3-#{client.@region}.amazonaws.com\/#{bucket}\/foo.jpg/)
+        ).to match(/https:\/\/#{bucket}\.s3-#{client.@region}\.amazonaws\.com\/foo\.jpg/)
       end
     end
 
@@ -113,7 +113,7 @@ Spectator.describe Shrine::Storage::S3 do
       it "returns the full url" do
         expect(
           subject.url("foo.jpg")
-        ).to match(/https:\/\/s3-#{client.@region}.amazonaws.com\/#{bucket}\/#{prefix}\/foo.jpg/)
+        ).to match(/https:\/\/#{bucket}\.s3-#{client.@region}\.amazonaws\.com\/#{prefix}\/foo\.jpg/)
       end
     end
   end

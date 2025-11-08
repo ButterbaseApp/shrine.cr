@@ -206,7 +206,7 @@ class Shrine
     # Shrine.with_file(io) { |file| file.path }
     # ```
     #
-    def with_file(io : IO)
+    def with_file(io : IO, &)
       if io.responds_to?(:path)
         yield io
       else
@@ -218,7 +218,7 @@ class Shrine
       end
     end
 
-    def with_file(uploaded_file : UploadedFile)
+    def with_file(uploaded_file : UploadedFile, &)
       uploaded_file.download do |tempfile|
         yield tempfile
       end
