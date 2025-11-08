@@ -199,7 +199,7 @@ class Shrine
 
     # Returns the storage that this file was uploaded to.
     def storage : Shrine::Storage::Base
-       Shrine.find_storage(storage_key) # storage_key is non-nil Metadata
+      Shrine.find_storage(storage_key) # storage_key is non-nil Metadata
     end
 
     def io : IO
