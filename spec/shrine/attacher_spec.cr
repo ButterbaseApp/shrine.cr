@@ -116,4 +116,23 @@ describe Shrine::Attacher do
     loaded.file.should_not be_nil
     loaded.file.not_nil!.id.should eq attacher.file.not_nil!.id
   end
+
+  it "changed? tracks attachment changes" do
+    attacher = Shrine::Attacher.new
+
+    # Initially, no changes have been made
+    attacher.changed?.should be_false
+
+    # After attaching a file, it should be marked as changed
+    attacher.attach(IO::Memory.new("data"))
+    attacher.changed?.should be_true
+
+    # After finalizing, it should no longer be marked as changed
+    attacher.finalize
+    attacher.changed?.should be_false
+
+    # Attaching nil should also mark as changed
+    attacher.attach(nil)
+    attacher.changed?.should be_true
+  end
 end

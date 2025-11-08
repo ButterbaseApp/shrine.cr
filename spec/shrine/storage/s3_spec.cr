@@ -14,10 +14,21 @@ class FakeClientForShrineSpec < Awscr::S3::Client
   end
 
   # minimal interface required by url implementation
-  def aws_access_key; "key"; end
-  def aws_secret_key; "secret"; end
-  def region; "us-east-2"; end
-  def endpoint; nil; end
+  def aws_access_key
+    "key"
+  end
+
+  def aws_secret_key
+    "secret"
+  end
+
+  def region
+    "us-east-2"
+  end
+
+  def endpoint
+    nil
+  end
 end
 
 class ExistsClientForShrineSpec < Awscr::S3::Client

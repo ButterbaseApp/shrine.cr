@@ -6,7 +6,6 @@ def build_fs_storage(root, prefix = nil, permissions = Shrine::Storage::FileSyst
 end
 
 describe Shrine::Storage::FileSystem do
-
   describe "#initialize" do
     it "expands the directory and creates it without prefix" do
       root = File.join(Dir.tempdir, "shrine-init")
@@ -106,7 +105,7 @@ describe Shrine::Storage::FileSystem do
       storage = build_fs_storage(root)
       storage.upload(FakeIO.new, "foo.jpg")
 
-       storage.url("foo.jpg", host: "http://example.test").should eq "http://example.test#{root}/foo.jpg"
+      storage.url("foo.jpg", host: "http://example.test").should eq "http://example.test#{root}/foo.jpg"
 
       FileUtils.rm_rf(root)
     end
@@ -128,7 +127,7 @@ describe Shrine::Storage::FileSystem do
       storage = build_fs_storage(root, prefix)
       storage.upload(FakeIO.new, "foo.jpg")
 
-       storage.url("foo.jpg", host: "http://cdn.test").should eq "http://cdn.test/#{prefix}/foo.jpg"
+      storage.url("foo.jpg", host: "http://cdn.test").should eq "http://cdn.test/#{prefix}/foo.jpg"
 
       FileUtils.rm_rf(root)
     end
@@ -155,6 +154,31 @@ describe Shrine::Storage::FileSystem do
       expect_raises(Shrine::FileNotFound) do
         storage.open("nonexistent.txt")
       end
+
+      FileUtils.rm_rf(root)
+    end
+
+    it "accepts File.open options" do
+      root = File.join(Dir.tempdir, "shrine-open-options")
+      storage = build_fs_storage(root)
+
+      # Upload a test file
+      storage.upload(IO::Memory.new("test content"), "test.txt")
+
+      # Test with custom mode (read-only text mode)
+      file = storage.open("test.txt", mode: "r")
+      file.should be_a(File)
+      file.close
+
+      # Test with default binary mode
+      file = storage.open("test.txt")
+      file.should be_a(File)
+      file.close
+
+      # Test with encoding parameter
+      file = storage.open("test.txt", mode: "r", encoding: "utf-8")
+      file.should be_a(File)
+      file.close
 
       FileUtils.rm_rf(root)
     end

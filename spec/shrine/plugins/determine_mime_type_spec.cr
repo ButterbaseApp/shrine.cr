@@ -60,7 +60,7 @@ describe Shrine::Plugins::DetermineMimeType do
     end
 
     it "returns nil for empty IOs" do
-      ShrineWithDetermineMimeTypeFile.determine_mime_type(fakeio("" )).should be_nil
+      ShrineWithDetermineMimeTypeFile.determine_mime_type(fakeio("")).should be_nil
     end
   end
 

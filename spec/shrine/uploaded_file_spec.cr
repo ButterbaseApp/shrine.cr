@@ -1,8 +1,6 @@
 require "../spec_helper"
 
 describe Shrine::UploadedFile do
-
-
   it "roundtrips via JSON" do
     Shrine.settings.storages["store"] = Shrine::Storage::Memory.new
     original = Shrine.store(fakeio("data"))
@@ -89,7 +87,7 @@ describe Shrine::UploadedFile do
       file = Shrine::UploadedFile.new("id", "cache", metadata)
       file.original_filename.should eq "foo.jpg"
     end
-   end
+  end
 
   describe "#extension" do
     it "uses id extension when present" do

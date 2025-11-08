@@ -263,7 +263,8 @@ class Shrine
       #     attacher.attach(file)
       #     attacher.changed? #=> true
       #
-      # TODO: This will work incorrect if `@previous` is nil
+      #     attacher.finalize
+      #     attacher.changed? #=> false
       def changed?
         !!@previous
       end

@@ -9,11 +9,11 @@ class ShrineWithAddMetadata < Shrine
     super
   end
 
-  add_metadata :custom, ->{
+  add_metadata :custom, -> {
     "value"
   }
 
-  add_metadata :multiple_values, ->{
+  add_metadata :multiple_values, -> {
     text = io.gets_to_end
 
     Shrine::UploadedFile::MetadataType{
@@ -26,8 +26,6 @@ class ShrineWithAddMetadata < Shrine
 end
 
 describe Shrine::Plugins::AddMetadata do
-
-
   describe "Shrine.add_metadata" do
     describe "with argument" do
       it "adds declared metadata" do
@@ -37,7 +35,6 @@ describe Shrine::Plugins::AddMetadata do
         metadata = uploader.extract_metadata(io)
 
         io.pos.should eq pos_before
-
 
         metadata["custom"].should eq "value"
         metadata["size"].should be_a(Int32)
