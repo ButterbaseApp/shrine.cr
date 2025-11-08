@@ -13,7 +13,7 @@ class Shrine
 
       def expanded_directory : String
         if relative_prefix
-          File.expand_path(File.join(directory, relative_prefix.not_nil!))
+          File.expand_path(File.join(directory, relative_prefix))
         else
           File.expand_path(directory)
         end
@@ -151,7 +151,7 @@ class Shrine
       end
 
       private def relative_path(id : String)
-        Path["/"] / relative_prefix.not_nil! / id.gsub("/", File::SEPARATOR)
+        Path["/"] / relative_prefix.as(String) / id.gsub("/", File::SEPARATOR)
       end
 
       private def relative(path)
@@ -159,7 +159,7 @@ class Shrine
       end
 
       private def relative_prefix : String?
-        relative(prefix.not_nil!) if prefix
+        prefix ? relative(prefix) : nil
       end
     end
   end

@@ -16,7 +16,7 @@ class Shrine
   # Raised when a file is not a valid IO.
   class InvalidFile < Error
     def initialize(io, missing_methods)
-      super "#{io.inspect} is not a valid IO object (it doesn't respond to #{missing_methods.map { |m, _| "##{m}" }.join(", ")})"
+      super "#{io.inspect} is not a valid IO object (it doesn't respond to #{missing_methods.map { |method, _| "##{method}" }.join(", ")})"
     end
   end
 
@@ -311,7 +311,7 @@ class Shrine
     private def extract_mime_type(io : IO)
       if io.responds_to?(:content_type) && io.content_type
         Shrine.warn "The \"mime_type\" Shrine metadata field will be set from the \"Content-Type\" request header, which might not hold the actual MIME type of the file. It is recommended to load the determine_mime_type plugin which determines MIME type from file content."
-        io.content_type.not_nil!.split(';').first # exclude media type parameters
+        io.content_type.to_s.split(';').first # exclude media type parameters
       end
     end
 

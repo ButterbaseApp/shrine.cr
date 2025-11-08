@@ -87,7 +87,7 @@ describe "Shrine.plugin" do
       settings = PluginUploader.plugin_settings
       all = settings.all
       all.size.should be > 0
-      all.any? { |p| p[:name] == "foo_plugin" }.should be_true
+      all.any? { |plugin| plugin[:name] == "foo_plugin" }.should be_true
     end
 
     it "provides accessor for each plugin" do

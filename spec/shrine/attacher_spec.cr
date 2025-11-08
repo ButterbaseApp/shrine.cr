@@ -90,7 +90,7 @@ describe Shrine::Attacher do
 
     url = attacher.url
     url.should_not be_nil
-    url.not_nil!.should contain("memory://")
+    url.should contain("memory://") if url
   end
 
   it "cached?/stored? accept explicit file" do
@@ -114,7 +114,11 @@ describe Shrine::Attacher do
 
     loaded = Shrine::Attacher.from_data(data)
     loaded.file.should_not be_nil
-    loaded.file.not_nil!.id.should eq attacher.file.not_nil!.id
+    loaded.file.should_not be_nil
+    attacher.file.should_not be_nil
+    loaded.file.should_not be_nil
+    attacher.file.should_not be_nil
+    loaded.file.try(&.id).should eq attacher.file.try(&.id)
   end
 
   it "changed? tracks attachment changes" do

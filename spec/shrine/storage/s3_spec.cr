@@ -45,7 +45,7 @@ class DeleteClientForShrineSpec < Awscr::S3::Client
   getter deleted = [] of String
 
   def delete_object(bucket, object : String? = nil, **options)
-    deleted << object.not_nil!
+    deleted << object if object
     true
   end
 end

@@ -41,7 +41,8 @@ describe Shrine::UploadedFile do
       File.read(path).should eq "data"
     end
 
-    File.exists?(path.not_nil!).should be_false
+    path.should_not be_nil
+    File.exists?(path).should be_false
   end
 
   it "#replace uploads new content to same id" do

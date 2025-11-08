@@ -59,7 +59,7 @@ describe Shrine::Plugins::Column do
 
     json = attacher.column_data
     json.should_not be_nil
-    Shrine::Plugins::Column::JsonSerializer.load(json.not_nil!)
+    Shrine::Plugins::Column::JsonSerializer.load(json) if json
   end
 
   it "allows custom column serializer" do
@@ -70,6 +70,6 @@ describe Shrine::Plugins::Column do
     attacher.change(file)
 
     json = attacher.column_data
-    ShrineWithColumnCustomSerializer::CustomSerializer.load(json.not_nil!).should be_a(Hash(String, String | Shrine::UploadedFile::MetadataType))
+    ShrineWithColumnCustomSerializer::CustomSerializer.load(json).should be_a(Hash(String, String | Shrine::UploadedFile::MetadataType)) if json
   end
 end

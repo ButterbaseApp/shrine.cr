@@ -60,12 +60,12 @@ describe Shrine do
 
   describe ".with_file" do
     it "yields existing File without closing it" do
-      file = File.tempfile("shrine-with-file") do |f|
+      file = File.tempfile("shrine-with-file") do |_file|
         f.puts "test"
       end
       file = File.open(file.path)
 
-      Shrine.with_file(file) do |f|
+      Shrine.with_file(file) do |_file|
         f.should be_a(File)
         f.path.should eq(file.path)
         f.closed?.should be_false
