@@ -12,8 +12,8 @@ class Shrine
       DEFAULT_DIRECTORY_PERMISSIONS = 0o755
 
       def expanded_directory : String
-        if relative_prefix
-          File.expand_path(File.join(directory, relative_prefix))
+        if rp = relative_prefix
+          File.expand_path(File.join(directory, rp))
         else
           File.expand_path(directory)
         end
@@ -154,12 +154,12 @@ class Shrine
         Path["/"] / relative_prefix.as(String) / id.gsub("/", File::SEPARATOR)
       end
 
-      private def relative(path)
+      private def relative(path : String) : String
         path.sub(%r{^/}, "")
       end
 
       private def relative_prefix : String?
-        prefix ? relative(prefix) : nil
+        prefix.try { |p| relative(p) }
       end
     end
   end

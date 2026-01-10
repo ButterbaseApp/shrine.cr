@@ -43,7 +43,9 @@ class Shrine
 
     def extension
       result = File.extname(id)[1..-1]?
-      result ||= File.extname(original_filename)[1..-1]? if original_filename
+      if result.nil? && (filename = original_filename)
+        result = File.extname(filename)[1..-1]?
+      end
       result = result.downcase if result
 
       result

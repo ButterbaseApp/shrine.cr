@@ -147,7 +147,9 @@ class Shrine
       #     attacher.promote
       #     attacher.stored? #=> true
       def promote(storage = store_key, **options) : Shrine::UploadedFile | Nil
-        set upload(file, storage, **options.merge(action: :store)) if file
+        if f = file
+          set upload(f, storage, **options.merge(action: :store))
+        end
       end
 
       # Delegates to `Shrine.upload`, passing the #context.
