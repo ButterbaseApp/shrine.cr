@@ -65,7 +65,7 @@ class Shrine
       def open(id : String, **options) : IO
         io = IO::Memory.new
         client.get_object(bucket, object_key(id)) do |obj|
-          IO.copy(obj, io)
+          IO.copy(obj.body_io, io)
         end
         io.rewind
         io
